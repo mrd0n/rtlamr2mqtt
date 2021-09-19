@@ -1,6 +1,12 @@
 name: 'Docker build'
 
 on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version'
+        required: true
+        default: 'ha-addon'
   push:
     paths-ignore:
       - '**.md'
