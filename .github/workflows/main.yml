@@ -1,12 +1,7 @@
 name: 'Docker build'
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version'
-        required: true
-        default: 'ha-addon'
+  workflow_dispatch: []
   push:
     paths-ignore:
       - '**.md'
@@ -14,7 +9,7 @@ on:
       - '.github/workflows/**'
       - 'examples/**'
     branches:
-      - main
+      - ha-addon
     tags:
       - '*.*.*'
 
@@ -39,18 +34,11 @@ jobs:
           # generate Docker tags based on the following events/attributes
           tags: |
             type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
             type=sha
       -
         name: Set up QEMU
         id: qemu
         uses: docker/setup-qemu-action@v1
-        with:
-          image: tonistiigi/binfmt:latest
-          platforms: amd64,arm64,arm/v7
       -
         name: Set up Docker Buildx
         id: buildx
@@ -70,7 +58,8 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          file: rtlamr2mqtt-addon/Dockerfile
+          platforms: linux/amd64,linux/i386,linux/arm64,linux/arm/v7,linux/arm/v6
           push:  ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ github.actor }}/rtlamr2mqtt:ha-addon
           labels: ${{ steps.meta.outputs.labels }}
