@@ -10,7 +10,7 @@ RUN go install github.com/bemasher/rtlamr@latest \
     && mkdir build && cd build \
     && cmake .. -DDETACH_KERNEL_DRIVER=ON -DENABLE_ZEROCOPY=ON -Wno-dev \
     && make \
-    && make install
+    && make install 
 
 FROM debian:bullseye-slim
 
@@ -34,8 +34,11 @@ RUN apt-get update \
     && mkdir /var/lib/rtlamr2mqtt \
     && chmod 755 /usr/bin/rtlamr2mqtt.py
 
+RUN apt-get update \
+    && apt-get install -y rtl-433
+
 STOPSIGNAL SIGTERM
 
 VOLUME ["/var/lib/rtlamr2mqtt"]
 
-ENTRYPOINT ["/usr/bin/rtlamr2mqtt.py"]
+ENTRYPOINT ["/usr/local/bin/rtlamr2mqtt.py"]

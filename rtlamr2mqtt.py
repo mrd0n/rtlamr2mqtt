@@ -493,6 +493,7 @@ while True:
     log_message('Sleep_for defined, time to sleep!')
     log_message('Terminating all subprocess...')
     shutdown(0,0)
+    os.system('rtl_433 -F \"mqtt://172.16.1.111:1883,user=mqtt,pass=mqttmqtt,retain=1,events=rtlamr[/id]/attributes,devices=rtlamr[/channel][/id],states=rtlamr/state[/id]\" -F kv -f 433550000 -T 60')
     if test_mode:
         # If in test mode and reached this point, everything is fine
         break
